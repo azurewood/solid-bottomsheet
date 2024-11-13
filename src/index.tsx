@@ -30,13 +30,13 @@ export type SolidBottomsheetProps = DefaultVariantProps | SnapVariantProps;
 export const SolidBottomsheet: Component<SolidBottomsheetProps> = (props) => {
   const isSnapVariant = props.variant === "snap";
 
-  const [maxHeight, setMaxHeight] = createSignal(window.visualViewport.height);
+  const [maxHeight, setMaxHeight] = createSignal(window.visualViewport?.height);
   const [isClosing, setIsClosing] = createSignal(false);
   const [isSnapping, setIsSnapping] = createSignal(false);
 
   const getDefaultTranslateValue = () => {
     if (isSnapVariant) {
-      const defaultValue = props.defaultSnapPoint({ maxHeight: maxHeight() });
+      const defaultValue = props.defaultSnapPoint({ maxHeight: maxHeight() || 0 });
       if (defaultValue !== maxHeight()) {
         return window.innerHeight - defaultValue;
       }
@@ -61,21 +61,21 @@ export const SolidBottomsheet: Component<SolidBottomsheetProps> = (props) => {
     createSignal(getDefaultTranslateValue());
 
   const onViewportChange = () => {
-    setMaxHeight(window.visualViewport.height);
+    setMaxHeight(window.visualViewport?.height);
   };
 
   onMount(() => {
     document.body.classList.add("sb-overflow-hidden");
-    window.visualViewport.addEventListener("resize", onViewportChange);
+    window.visualViewport?.addEventListener("resize", onViewportChange);
   });
 
   onCleanup(() => {
     document.body.classList.remove("sb-overflow-hidden");
-    window.visualViewport.removeEventListener("resize", onViewportChange);
+    window.visualViewport?.removeEventListener("resize", onViewportChange);
   });
 
   createEffect(() => {
-    snapPoints = getSnapPoints(maxHeight());
+    snapPoints = getSnapPoints(maxHeight() || 0);
   });
 
   let snapPoints: number[] = [];
@@ -103,7 +103,7 @@ export const SolidBottomsheet: Component<SolidBottomsheetProps> = (props) => {
         setBottomsheetTranslateValue((previousVal) =>
           clampInRange({
             minimum: 0,
-            maximum: maxHeight(),
+            maximum: maxHeight() || 0,
             current: previousVal + dragDistance,
           })
         );
@@ -130,7 +130,7 @@ export const SolidBottomsheet: Component<SolidBottomsheetProps> = (props) => {
 
     switch (props.variant) {
       case "snap":
-        currentPoint = maxHeight() - lastTouchPosition;
+        currentPoint = maxHeight() || 0 - lastTouchPosition;
 
         closestPoint = snapPoints.reduce((previousVal, currentVal) => {
           return Math.abs(currentVal - currentPoint) <
@@ -145,7 +145,7 @@ export const SolidBottomsheet: Component<SolidBottomsheetProps> = (props) => {
         }
 
         setIsSnapping(true);
-        setBottomsheetTranslateValue(maxHeight() - closestPoint);
+        setBottomsheetTranslateValue(maxHeight() || 0 - closestPoint);
 
         break;
       case "default":

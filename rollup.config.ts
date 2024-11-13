@@ -1,3 +1,4 @@
+//@ts-ignore
 import withSolid from "rollup-preset-solid";
 import copy from "rollup-plugin-copy";
 
