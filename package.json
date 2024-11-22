@@ -28,7 +28,7 @@
     "@changesets/changelog-github": "0.4.6",
     "@changesets/cli": "2.24.2",
     "prettier": "2.7.1",
-    "rollup": "^2.77.2",
+    "rollup": "^2.79.2",
     "rollup-plugin-copy": "3.4.0",
     "rollup-preset-solid": "^1.4.0",
     "typescript": "4.7.4"
